@@ -122,4 +122,54 @@ class Account extends ResourceController{
             $this->fail($output,400);
         }
     }
+
+    public function put($username = NULL){
+
+        $json = $this->request->getJSON();
+
+        if($json){
+            
+        }else{
+
+        }
+
+        $account = $this->user->getAccount($username);
+    }
+
+    public function delete($username = NULL){
+        $account = $this->user->getAccount($username);
+
+        if($account){
+            try {
+                $delete = $this->user->deleteAccount($account['id']);
+
+                if($delete){
+                    $output = [
+                        'status' => 200,
+                        'message' => 'Account deleted'
+                    ];
+                    return $this->respond($output,200);
+                }else{
+                    $output = [
+                        'status' => 400,
+                        'message' => 'Something went wrong'
+                    ];
+                    return $this->respond($output,400);
+                }
+            } catch (\Exception $e) {
+                $output = [
+                    'status' => 400,
+                    'message' => $e->getMessage()
+                ];
+                return $this->respond($output,400);
+            }
+        }else{
+            $output = [
+                'status' => 401,
+                'message' => 'Account not found'
+            ];
+
+            return $this->respond($output,401);
+        }
+    }
 }

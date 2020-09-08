@@ -27,6 +27,14 @@ class User_model extends Model{
         return $account;
     }
 
+    public function updateAccount($data,$id){
+        return $this->db->table('user_accounts')->update($data,['id' => $id]);
+    }
+
+    public function deleteAccount($id){
+        return $this->db->table('user_accounts')->delete(['id' => $id]);
+    }
+
     public function addProfile($data){
         $insert = $this->db->table('user_profiles')->insert($data);
 
@@ -47,6 +55,14 @@ class User_model extends Model{
         }
         
         return $profile;
+    }
+
+    public function updateProfile($data,$account_id){
+        return $this->db->table('user_profiles')->update($data,['account_id' => $account_id]);
+    }
+
+    public function deleteProfile($account_id){
+        return $this->db->table('user_profiles')->delete(['account_id' => $account_id]);
     }
 
 }
