@@ -9,7 +9,7 @@ class Profile extends ResourceController{
         $this->user = new User_model();
     }
 
-    public function changeBio($username)
+    public function change($username)
     {
 
         $json = $this->request->getJSON();

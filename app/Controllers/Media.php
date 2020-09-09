@@ -37,7 +37,15 @@ class Media extends ResourceController{
             return $this->respond($output,400);
         }
 
-        $folder = './assets/uploads/'.$profile['media_folder'].'/'.$file->getExtension();
+        if(substr($file->getMimeType,0,5) != 'image'){
+            $output = [
+                'status' => 400,
+                'message' => 'File not an image'
+            ];
+            return $this->respond($output,400);
+        }
+
+        $folder = './assets/uploads/'.$profile['media_folder'].'/'.$file->getMimeType();
 
         if (!is_dir($folder)){
             mkdir($folder,0777,TRUE);

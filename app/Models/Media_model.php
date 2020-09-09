@@ -21,7 +21,11 @@ class Media_model extends Model{
         return $this->db->transStatus();
     }
 
-    public function getReference(){
+    public function getReference($id){
+        return $this->db->table('media_references')
+                            ->where('id',$id)
+                            ->get()
+                            ->getRowArray();
 
     }
 }
