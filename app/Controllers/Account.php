@@ -8,12 +8,13 @@ use Config\Services;
 
 class Account extends ResourceController{
 
-    public function __construct(){
+    public function __construct()
+    {
         $this->user = new User_model();
     }
 
-    public function login(){
-
+    public function login()
+    {
         $json = $this->request->getJSON();
 
         if($json){
@@ -67,7 +68,8 @@ class Account extends ResourceController{
         }
     }
 
-    public function register(){
+    public function register()
+    {
 
         $json = $this->request->getJSON();
 
@@ -105,13 +107,13 @@ class Account extends ResourceController{
                     'status' => 200,
                     'message' => 'Account created'
                 ];
-                $this->respond($output,200);
+                return $this->respond($output,200);
             }else{
                 $output = [
                     'status' => 400,
                     'message' => 'Something went wrong'
                 ];
-                $this->respond($output,400);
+                return $this->respond($output,400);
             }
         }catch(\Exception $e){
             $output = [
@@ -119,11 +121,12 @@ class Account extends ResourceController{
                 'message' => $e->getMessage()
             ];
 
-            $this->fail($output,400);
+            return $this->respond($output,400);
         }
     }
 
-    public function put($username = NULL){
+    public function put($username = NULL)
+    {
 
         $json = $this->request->getJSON();
 

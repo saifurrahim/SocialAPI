@@ -5,9 +5,18 @@ use CodeIgniter\Model;
 class User_model extends Model{
 
     public function addAccount($data){
-        $insert = $this->db->table('user_accounts')->insert($data);
 
-        return $insert ? true : false;
+        $this->db->transStart();
+        $this->db->table('user_accounts')->insert($data);
+        $account = $this->getAccount($data['username']);
+        $profile = array(
+            'account_id' => $account['id'],
+            'media_folder' => $account['username']
+        );
+        $this->db->table('user_profiles')->insert($profile);
+        $this->db->transComplete();
+
+        return $this->db->transStatus();
     }
 
     public function getAccount($username = false){

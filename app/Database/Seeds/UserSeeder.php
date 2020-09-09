@@ -7,8 +7,12 @@ class UserSeeder extends Seeder{
         $data = [
             [
                 'username' => 'saifurrahim',
-                'password' => password_hash('C0b4d1b4c4',PASSWORD_BCRYPT)
+                'password' => '$2y$10$zFz4cB7wZLpT9dqR10/2QOIoQAi76vvahPNnmwIbmNucPZ7gjH7Ea'
             ],
+            [
+                'username' => 'admin',
+                'password' => password_hash('admin',PASSWORD_BCRYPT)
+            ]
             //[...]
         ];
 
