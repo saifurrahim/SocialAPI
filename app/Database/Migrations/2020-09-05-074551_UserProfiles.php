@@ -6,6 +6,8 @@ class UserProfiles extends Migration
 {
 	public function up()
 	{
+		$this->db->disableForeignKeyChecks();
+
 		$this->forge->addField([
 			'account_id' => [
 				'type' => 'BIGINT',
@@ -66,13 +68,13 @@ class UserProfiles extends Migration
 				'type' => 'VARCHAR',
 				'constraint' => '30'
 			],
-			'media_profile_picture' => [
+			'media_picture' => [
 				'type' => 'BIGINT',
 				'constraint' => '20',
 				'unsigned' => TRUE,
 				'null' => TRUE
 			],
-			'media_profile_banner' => [
+			'media_banner' => [
 				'type' => 'BIGINT',
 				'constraint' => '20',
 				'unsigned' => TRUE,
@@ -94,7 +96,11 @@ class UserProfiles extends Migration
 
 		$this->forge->addKey('account_id',TRUE);
 		$this->forge->addForeignKey('account_id','user_accounts','id','CASCADE','CASCADE');
+		$this->forge->addForeignKey('media_picture','media_references','id');
+		$this->forge->addForeignKey('media_banner','media_references','id');
 		$this->forge->createTable('user_profiles');
+
+		$this->db->enableForeignKeyChecks();
 	}
 
 	//--------------------------------------------------------------------

@@ -15,7 +15,8 @@ class UserAccounts extends Migration
 			],
 			'username' => [
 				'type' => 'VARCHAR',
-				'constraint' => '30'
+				'constraint' => '30',
+				'unique' => TRUE
 			],
 			'password' => [
 				'type' => 'VARCHAR',
@@ -28,7 +29,7 @@ class UserAccounts extends Migration
 			'register_date datetime default current_timestamp'
 		]);
 
-		$this->forge->addPrimaryKey('id');
+		$this->forge->addKey('id',TRUE);
 		$this->forge->createTable('user_accounts');
 	}
 

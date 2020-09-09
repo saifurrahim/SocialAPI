@@ -9,11 +9,12 @@ class Profile extends ResourceController{
         $this->user = new User_model();
     }
 
-    public function create(){
+    public function changeBio($username)
+    {
+
         $json = $this->request->getJSON();
 
         if($json){
-            $username = $json->username;
 
             $full_name = (empty($json->full_name)) ? NULL : $json->full_name;
             $birth_date = (empty($json->birth_date)) ? NULL : $json->birth_date;
@@ -26,7 +27,6 @@ class Profile extends ResourceController{
             $sub_district = (empty($json->sub_district)) ? NULL : $json->sub_district;
             $village = (empty($json->village)) ? NULL : $json->village;
         }else{
-            $username = $this->request->getPost('username');
             
             $full_name = (empty($this->request->getPost('full_name'))) ? NULL : $this->request->getPost('full_name');
             $birth_date = (empty($this->request->getPost('birth_date'))) ? NULL : $this->request->getPost('birth_date');
@@ -40,20 +40,10 @@ class Profile extends ResourceController{
             $village = (empty($this->request->getPost('village'))) ? NULL : $this->request->getPost('village');
         }
 
-        if(empty($username)){
-            $output = [
-                'status' => 400,
-                'message' => 'Username not supplied'
-            ];
-
-            return $this->respond($output,400);
-        }
-
         $account = $this->user->getAccount($username);
 
         if($account){
             $data_profile = array(
-                'account_id' => $account['id'],
                 'full_name' => $full_name,
                 'birth_date' => $birth_date,
                 'gender' => $gender,
@@ -63,28 +53,16 @@ class Profile extends ResourceController{
                 'province' => $province,
                 'district' => $district,
                 'sub_district' => $sub_district,
-                'village' => $village,
-                'media_folder' => $username
+                'village' => $village
             );
-
-
-            $profile = $this->user->getProfile($account['id']);
-
-            if($profile){
-                $output = [
-                    'status' => 409,
-                    'message' => 'User profile already exists'
-                ];
-                $this->respond($output,409);
-            }
             
             try {
-                $insert = $this->user->addProfile($data_profile);
+                $update = $this->user->updateProfile($data_profile,$account['id']);
 
-                if($insert){
+                if($update){
                     $output = [
                         'status' => 200,
-                        'message' => 'Profile created'
+                        'message' => 'Profile updated'
                     ];
                     return $this->respond($output,200);
                 }else{
@@ -94,6 +72,7 @@ class Profile extends ResourceController{
                     ];
                     return $this->respond($output,400);
                 }
+
             } catch (\Exception $e) {
                 $output = [
                     'status' => 400,
@@ -110,7 +89,6 @@ class Profile extends ResourceController{
 
             return $this->respond($output,400);
         }
-
-
     }
+
 }

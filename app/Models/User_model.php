@@ -4,6 +4,7 @@ use CodeIgniter\Model;
 
 class User_model extends Model{
 
+// ACCOUNT
     public function addAccount($data){
 
         $this->db->transStart();
@@ -11,7 +12,7 @@ class User_model extends Model{
         $account = $this->getAccount($data['username']);
         $profile = array(
             'account_id' => $account['id'],
-            'media_folder' => $account['username']
+            'media_folder' => $account['username'].'/'.$account['id'].'/'
         );
         $this->db->table('user_profiles')->insert($profile);
         $this->db->transComplete();
@@ -40,16 +41,15 @@ class User_model extends Model{
         return $this->db->table('user_accounts')->update($data,['id' => $id]);
     }
 
-    public function deleteAccount($id){
-        return $this->db->table('user_accounts')->delete(['id' => $id]);
+    public function blockAccount($id){
+        return $this->db->table('user_accounts')->update(['is_blocked' => 1],['id' => $id]);
     }
 
-    public function addProfile($data){
-        $insert = $this->db->table('user_profiles')->insert($data);
-
-        return $insert ? true : false;
+    public function unblockAccount($id){
+        return $this->db->table('user_accounts')->update(['is_blocked' => 0],['id' => $id]);
     }
 
+// PROFILE
     public function getProfile($account_id = false){
 
         if($account_id){
@@ -68,10 +68,6 @@ class User_model extends Model{
 
     public function updateProfile($data,$account_id){
         return $this->db->table('user_profiles')->update($data,['account_id' => $account_id]);
-    }
-
-    public function deleteProfile($account_id){
-        return $this->db->table('user_profiles')->delete(['account_id' => $account_id]);
     }
 
 }
