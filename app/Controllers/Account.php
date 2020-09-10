@@ -83,6 +83,20 @@ class Account extends ResourceController{
 
         }
 
+        if(!preg_match('/^[a-zA-Z][a-zA-Z0-9_.]{4,30}+/',$username)){
+            $output = [
+                'status' => 400,
+                'message' => 'Supplied username has wrong format',
+                'data' => [
+                    1 => 'Username must start with letter',
+                    2 => 'The rest of characters can be a letter or number',
+                    3 => 'Spaces not allowed, use _ or . instead to separate character'
+                ]
+            ];
+
+            return $this->respond($output,409);
+        }
+
         $account = $this->user->getAccount($username);
 
         if($account){
