@@ -271,13 +271,21 @@ class Account extends ResourceController{
         $suggestion = 5;
         $generated = 0;
 
-        $i = 1;
+        $i = 0;
         $usernames = array();
 
         try {
             while($generated < $suggestion){
-                if($i === 1){
+                if($i === 0){
                     $username = $names[0];
+                    $account = $this->user->getAccount($username);
+    
+                    if(!$account && !in_array($username,$usernames)){
+                        $usernames[$generated] = $username;
+                        $generated++;
+                    }
+                }elseif($i === 1){
+                    $username = $names[0].'.'.end($names);
                     $account = $this->user->getAccount($username);
     
                     if(!$account && !in_array($username,$usernames)){
@@ -293,7 +301,7 @@ class Account extends ResourceController{
                         $generated++;
                     }
                 }elseif($i === 3){
-                    $username = end($names).substr($names[0],0,2);
+                    $username = end($names).'_'.substr($names[0],0,2);
                     $account = $this->user->getAccount($username);
     
                     if(!$account && !in_array($username,$usernames)){
