@@ -256,4 +256,79 @@ class Account extends ResourceController{
             return $this->respond($output,401);
         }
     }
+
+    public function suggest(){
+        $json = $this->request->getJSON();
+
+        if($json){
+            $full_name = $json->full_name;
+        }else{
+            $full_name = $this->request->getPost('full_name');
+        }
+
+        $names = explode(" ",strtolower($full_name));
+
+        $suggestion = 5;
+        $generated = 0;
+
+        $i = 1;
+        $usernames = array();
+
+        try {
+            while($generated < $suggestion){
+                if($i === 1){
+                    $username = $names[0];
+                    $account = $this->user->getAccount($username);
+    
+                    if(!$account && !in_array($username,$usernames)){
+                        $usernames[$generated] = $username;
+                        $generated++;
+                    }
+                }elseif($i === 2){
+                    $username = $names[0].substr(end($names),0,2);
+                    $account = $this->user->getAccount($username);
+    
+                    if(!$account && !in_array($username,$usernames)){
+                        $usernames[$generated] = $username;
+                        $generated++;
+                    }
+                }elseif($i === 3){
+                    $username = end($names).substr($names[0],0,2);
+                    $account = $this->user->getAccount($username);
+    
+                    if(!$account && !in_array($username,$usernames)){
+                        $usernames[$generated] = $username;
+                        $generated++;
+                    }
+                }else{
+                    $available = false;
+    
+                    while(!$available){
+                        $username = $names[0].mt_rand(0,1000);
+                        $account = $this->user->getAccount($username);
+    
+                        if(!$account && !in_array($username,$usernames)){
+                            $usernames[$generated] = $username;
+                            $generated++;
+                            $available = true;
+                        }
+                    }
+                }
+                $i++;
+            }
+        // end loop
+
+            $output = [
+                'status' => 200,
+                'data' => $usernames
+            ];
+            return $this->respond($output,200);
+
+        } catch (\Exception $e) {
+            $output = [
+                'status' => 400,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
 }
